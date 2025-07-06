@@ -1,1 +1,1 @@
-from tinyquant.quantizers import *  # noqa: F401, F403
+import tinyquant.quantizers.none_quantizer  # noqa: F401

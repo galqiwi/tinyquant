@@ -21,5 +21,5 @@ class NoneQuantizer(Quantizer):
     @staticmethod
     def forward(linear: "QuantizedLinear", input_: torch.Tensor) -> torch.Tensor:
         return F.linear(
-            input_, linear.weights_dict['weight'], linear.weights_dict['bias']
+            input_, linear.weights_dict['weight'], linear.weights_dict.get('bias', None)
         )
