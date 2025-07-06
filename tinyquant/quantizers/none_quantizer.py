@@ -15,7 +15,7 @@ class NoneQuantizer(Quantizer):
     @staticmethod
     def quantize(weight: torch.Tensor, bias: Optional[torch.Tensor]) -> "QuantizedLinear":
         return QuantizedLinear.from_weights(nn.ParameterDict({
-            'weight': weight,
+            'weight': nn.Parameter(weight, requires_grad=False),
         }), bias, {'quantization_method': NoneQuantizer.name()})
 
     @staticmethod
