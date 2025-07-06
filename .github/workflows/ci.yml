@@ -28,4 +28,4 @@ jobs:
       run: uv run pytest
 
     - name: Run flake8
-      run: uv run flake8 tests zllm_lib
+      run: uv run flake8 finyquant tests
