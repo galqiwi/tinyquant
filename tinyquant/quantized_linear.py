@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from functools import cached_property
 import json
-from typing import Dict, Any
+from typing import Dict, Any, Mapping, Optional
 from .quantizer import get_quantizer
 
 
@@ -25,12 +25,14 @@ def dequantize_meta(meta_tensor: torch.Tensor) -> Dict[str, Any]:
 
 
 class QuantizedLinear(nn.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.weights_dict = nn.ParameterDict()
 
     @classmethod
-    def from_weights(cls, weights_dict, bias, meta) -> "QuantizedLinear":
+    def from_weights(
+        cls, weights_dict: nn.ParameterDict, bias: Optional[torch.Tensor], meta: Dict[str, Any]
+    ) -> "QuantizedLinear":
         output = cls()
         assert 'quantization_method' in meta
 
@@ -50,21 +52,23 @@ class QuantizedLinear(nn.Module):
         output.weights_dict = weights_dict
         return output
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         return get_quantizer(self.quantization_method).forward(self, x)
 
     @cached_property
-    def quantization_method(self):
-        return self.meta['quantization_method']
+    def quantization_method(self) -> str:
+        return str(self.meta['quantization_method'])
 
     @cached_property
-    def meta(self):
+    def meta(self) -> Dict[str, Any]:
         if len(self.weights_dict) == 0:
             raise RuntimeError("QuantizedLinear is not initialized")
 
         return dequantize_meta(self.weights_dict['meta'])
 
-    def load_state_dict(self, state_dict, strict=True):
+    def load_state_dict(
+        self, state_dict: Mapping[str, Any], strict: bool = True, assign: bool = False
+    ) -> Any:
         assert len(self.weights_dict) == 0
 
         prefix = 'weights_dict.'
