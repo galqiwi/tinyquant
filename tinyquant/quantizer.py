@@ -42,11 +42,11 @@ def get_quantizer(name: str) -> Type[Quantizer]:
 
 
 def quantize(
-    name: str,
+    method_name: str,
     weight: torch.Tensor,
     bias: Optional[torch.Tensor],
     *args: Any,
     **kwargs: Any,
 ) -> "QuantizedLinear":
-    quantizer = get_quantizer(name)
+    quantizer = get_quantizer(method_name)
     return quantizer.quantize(weight, bias, *args, **kwargs)
