@@ -30,6 +30,10 @@ class QuantizedLinear(nn.Module):
         self.weights_dict = nn.ParameterDict()
 
     @classmethod
+    def empty(cls) -> "QuantizedLinear":
+        return QuantizedLinear()
+
+    @classmethod
     def from_weights(
         cls, weights_dict: nn.ParameterDict, bias: Optional[torch.Tensor], meta: Dict[str, Any]
     ) -> "QuantizedLinear":
