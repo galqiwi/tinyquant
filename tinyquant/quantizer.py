@@ -14,15 +14,14 @@ class Quantizer(ABC):
 
     @staticmethod
     @abstractmethod
-    def quantize(
-        weight: torch.Tensor, bias: Optional[torch.Tensor], *args: Any, **kwargs: Any
-    ) -> "QuantizedLinear":
+    def forward(linear: "QuantizedLinear", input_: torch.Tensor) -> torch.Tensor:
         pass
 
     @staticmethod
-    @abstractmethod
-    def forward(linear: "QuantizedLinear", input_: torch.Tensor) -> torch.Tensor:
-        pass
+    def quantize(
+        weight: torch.Tensor, bias: Optional[torch.Tensor], *args: Any, **kwargs: Any
+    ) -> "QuantizedLinear":
+        raise NotImplementedError
 
 
 _QUANTIZER_BY_NAME: Dict[str, Type[Quantizer]] = {}
