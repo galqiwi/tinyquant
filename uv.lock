@@ -642,6 +642,7 @@ dev = [
     { name = "pytest-cov" },
     { name = "tqdm" },
     { name = "types-tqdm" },
+    { name = "types-transformers" },
 ]
 
 [package.metadata]
@@ -657,6 +658,7 @@ dev = [
     { name = "pytest-cov", specifier = ">=6.2.1" },
     { name = "tqdm", specifier = ">=4.67.1" },
     { name = "types-tqdm", specifier = ">=4.67.0.20250516" },
+    { name = "types-transformers", specifier = ">=0.1.0" },
 ]
 
 [[package]]
@@ -799,6 +801,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/bd/07/eb40de2dc2ff2d1a53180330981b1bdb42313ab4e1b11195d8d64c878b3c/types_tqdm-4.67.0.20250516.tar.gz", hash = "sha256:230ccab8a332d34f193fc007eb132a6ef54b4512452e718bf21ae0a7caeb5a6b", size = 17232, upload-time = "2025-05-16T03:09:52.091Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3b/92/df621429f098fc573a63a8ba348e731c3051b397df0cff278f8887f28d24/types_tqdm-4.67.0.20250516-py3-none-any.whl", hash = "sha256:1dd9b2c65273f2342f37e5179bc6982df86b6669b3376efc12aef0a29e35d36d", size = 24032, upload-time = "2025-05-16T03:09:51.226Z" },
+]
+
+[[package]]
+name = "types-transformers"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b0/67/cf246ac257b56912a11794522d3c4e6ae5e59769fb392120c05e004288f8/types_transformers-0.1.0.tar.gz", hash = "sha256:f3258c79997d050db35cd5e242e4ef105503da77024c313aef3e89aab652ffe3", size = 410703, upload-time = "2025-04-01T09:58:18.765Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/da/fd/2915e8e499adf33488b9b4cf44b28eaf8870d5a567c7c000b229372f89c4/types_transformers-0.1.0-py3-none-any.whl", hash = "sha256:4c569ea6149a8dd17d360664926f55dda003f3e46de85e64428ce23f729e3a35", size = 533232, upload-time = "2025-04-01T09:58:16.591Z" },
 ]
 
 [[package]]

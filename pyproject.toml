@@ -23,6 +23,7 @@ dev = [
     "pytest-cov>=6.2.1",
     "tqdm>=4.67.1",
     "types-tqdm>=4.67.0.20250516",
+    "types-transformers>=0.1.0",
 ]
 
 [tool.mypy]
