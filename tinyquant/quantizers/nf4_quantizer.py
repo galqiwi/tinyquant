@@ -16,12 +16,16 @@ class NF4Quantizer(DataFreeQuantizer):
     def quantize(weight: torch.Tensor, bias: Optional[torch.Tensor]) -> "QuantizedLinear":
         import bitsandbytes.functional
 
+        out_features, in_features = weight.shape
+
         quantized_weight, quant_state = bitsandbytes.functional.quantize_nf4(weight, blocksize=64)
 
         return QuantizedLinear.from_weights(
             nn.ParameterDict({
                 'quantized_weight': nn.Parameter(quantized_weight, requires_grad=False),
                 'absmax': nn.Parameter(quant_state.absmax, requires_grad=False),
+                'in_features': in_features,
+                'out_features': out_features,
             }),
             bias,
             {'quantization_method': NF4Quantizer.name(), 'shape': tuple(weight.shape)},

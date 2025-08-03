@@ -50,4 +50,5 @@ def quantize(
     **kwargs: Any,
 ) -> "QuantizedLinear":
     quantizer = get_quantizer(method_name)
+    assert issubclass(quantizer, DataFreeQuantizer)
     return quantizer.quantize(weight, bias, *args, **kwargs)

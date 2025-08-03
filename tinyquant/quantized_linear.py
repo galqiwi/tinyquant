@@ -40,6 +40,11 @@ class QuantizedLinear(nn.Module):
         output = cls()
         assert 'quantization_method' in meta
 
+        assert 'in_features' in meta
+        assert isinstance(meta['in_features'], int)
+        assert 'out_features' in meta
+        assert isinstance(meta['out_features'], int)
+
         assert 'meta' not in weights_dict
         assert isinstance(weights_dict, nn.ParameterDict)
         weights_dict['meta'] = nn.Parameter(
@@ -60,15 +65,23 @@ class QuantizedLinear(nn.Module):
         return get_quantizer(self.quantization_method).forward(self, x)
 
     @cached_property
-    def quantization_method(self) -> str:
-        return str(self.meta['quantization_method'])
-
-    @cached_property
     def meta(self) -> Dict[str, Any]:
         if len(self.weights_dict) == 0:
             raise RuntimeError("QuantizedLinear is not initialized")
 
         return dequantize_meta(self.weights_dict['meta'])
+
+    @cached_property
+    def quantization_method(self) -> str:
+        return str(self.meta['quantization_method'])
+
+    @cached_property
+    def in_features(self) -> int:
+        return int(self.meta['in_features'])
+
+    @cached_property
+    def out_features(self) -> int:
+        return int(self.meta['out_features'])
 
     def load_state_dict(
         self, state_dict: Mapping[str, Any], strict: bool = True, assign: bool = False

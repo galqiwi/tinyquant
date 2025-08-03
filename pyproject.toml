@@ -36,4 +36,4 @@ module = "bitsandbytes.*"
 ignore_missing_imports = true
 
 [tool.flake8]
-max-line-length = 99
+max-line-length = 120

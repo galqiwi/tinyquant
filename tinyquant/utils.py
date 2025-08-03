@@ -31,7 +31,14 @@ def quantize_all_linear_layers(model: torch.nn.Module, method_name: str, verbose
         del parent, linear
 
 
-def quantize_matching_linear_layers(model: torch.nn.Module, method_name: str, pattern: str, verbose: bool = False, *args, **kwargs):
+def quantize_matching_linear_layers(
+    model: torch.nn.Module,
+    method_name: str,
+    pattern: str,
+    verbose: bool = False,
+    *args,
+    **kwargs
+):
     linear_paths = []
     for module_path, module in model.named_modules():
         if isinstance(module, torch.nn.Linear):
