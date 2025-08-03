@@ -1,4 +1,4 @@
-from tinyquant.quantizer import Quantizer, registered_quantizer
+from tinyquant.quantizer import DataFreeQuantizer, registered_quantizer
 from tinyquant.quantized_linear import QuantizedLinear
 from typing import Optional
 import torch
@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 
 @registered_quantizer
-class NF4Quantizer(Quantizer):
+class NF4Quantizer(DataFreeQuantizer):
     @staticmethod
     def name() -> str:
         return "nf4"

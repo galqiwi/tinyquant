@@ -12,9 +12,8 @@ def main():
     )
     tokenizer = transformers.AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
     quantize_matching_linear_layers(model, 'nf4', 'model.layers.*.self_attn.q_proj')
-    print(model)
-    # output = model.generate(tokenizer("", return_tensors="pt")["input_ids"].cuda(), max_new_tokens=1000)
-    # print(tokenizer.decode(output[0]))
+    output = model.generate(tokenizer("", return_tensors="pt")["input_ids"].cuda(), max_new_tokens=1000)
+    print(tokenizer.decode(output[0]))
 
 
 if __name__ == "__main__":

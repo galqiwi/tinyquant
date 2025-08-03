@@ -17,6 +17,8 @@ class Quantizer(ABC):
     def forward(linear: "QuantizedLinear", input_: torch.Tensor) -> torch.Tensor:
         pass
 
+
+class DataFreeQuantizer(Quantizer, ABC):
     @staticmethod
     def quantize(
         weight: torch.Tensor, bias: Optional[torch.Tensor], *args: Any, **kwargs: Any
