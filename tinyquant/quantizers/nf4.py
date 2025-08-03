@@ -14,14 +14,14 @@ class NF4Quantizer(DataFreeQuantizer):
 
     @staticmethod
     def quantize(
-        weight: torch.Tensor, bias: Optional[torch.Tensor]
+        weight: torch.Tensor, bias: Optional[torch.Tensor], block_size: int = 64
     ) -> "QuantizedLinear":
         import bitsandbytes.functional
 
         out_features, in_features = weight.shape
 
         quantized_weight, quant_state = bitsandbytes.functional.quantize_nf4(
-            weight, blocksize=64
+            weight, blocksize=block_size
         )
 
         return QuantizedLinear.from_weights(
@@ -31,12 +31,16 @@ class NF4Quantizer(DataFreeQuantizer):
                         quantized_weight, requires_grad=False
                     ),
                     "absmax": nn.Parameter(quant_state.absmax, requires_grad=False),
-                    "in_features": in_features,
-                    "out_features": out_features,
                 }
             ),
             bias,
-            {"quantization_method": NF4Quantizer.name(), "shape": tuple(weight.shape)},
+            {
+                "quantization_method": NF4Quantizer.name(),
+                "shape": tuple(weight.shape),
+                "in_features": in_features,
+                "out_features": out_features,
+                "block_size": block_size,
+            },
         )
 
     @staticmethod
@@ -47,7 +51,7 @@ class NF4Quantizer(DataFreeQuantizer):
             absmax=linear.weights_dict["absmax"],
             shape=linear.meta["shape"],
             dtype=input_.dtype,
-            blocksize=64,
+            blocksize=linear.meta["block_size"],
             quant_type="nf4",
         )
 
