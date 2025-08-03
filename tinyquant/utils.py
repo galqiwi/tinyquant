@@ -2,7 +2,7 @@ import torch
 import fnmatch
 from tinyquant.quantizer import quantize
 from typing import Any, Iterable
-from tqdm import tqdm
+import tqdm
 
 
 def _split_module_path(module_path: str) -> tuple[str | None, str]:
@@ -22,7 +22,7 @@ def quantize_all_linear_layers(
 
     linear_paths_iter: Iterable[str]
     if verbose:
-        linear_paths_iter = tqdm(linear_paths)
+        linear_paths_iter = tqdm.tqdm(linear_paths)
     else:
         linear_paths_iter = linear_paths
 
@@ -57,7 +57,7 @@ def quantize_matching_linear_layers(
 
     linear_paths_iter: Iterable[str]
     if verbose:
-        linear_paths_iter = tqdm(linear_paths)
+        linear_paths_iter = tqdm.tqdm(linear_paths)
     else:
         linear_paths_iter = linear_paths
 
