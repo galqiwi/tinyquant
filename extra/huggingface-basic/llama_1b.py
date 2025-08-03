@@ -3,7 +3,7 @@ import transformers
 from tinyquant.utils import quantize_matching_linear_layers
 
 
-def main():
+def main() -> None:
     model = transformers.AutoModelForCausalLM.from_pretrained(
         "unsloth/Llama-3.2-1B",
         torch_dtype=torch.bfloat16,
