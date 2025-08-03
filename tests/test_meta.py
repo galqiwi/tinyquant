@@ -9,5 +9,5 @@ def check_quantize_dequantize(meta: Dict[str, Any]) -> None:
 
 def test_meta() -> None:
     check_quantize_dequantize(dict())
-    check_quantize_dequantize({'foo': 'bar'})
-    check_quantize_dequantize({'foo': 1, 'bar': None})
+    check_quantize_dequantize({"foo": "bar"})
+    check_quantize_dequantize({"foo": 1, "bar": None})

@@ -13,22 +13,30 @@ class NF4Quantizer(DataFreeQuantizer):
         return "nf4"
 
     @staticmethod
-    def quantize(weight: torch.Tensor, bias: Optional[torch.Tensor]) -> "QuantizedLinear":
+    def quantize(
+        weight: torch.Tensor, bias: Optional[torch.Tensor]
+    ) -> "QuantizedLinear":
         import bitsandbytes.functional
 
         out_features, in_features = weight.shape
 
-        quantized_weight, quant_state = bitsandbytes.functional.quantize_nf4(weight, blocksize=64)
+        quantized_weight, quant_state = bitsandbytes.functional.quantize_nf4(
+            weight, blocksize=64
+        )
 
         return QuantizedLinear.from_weights(
-            nn.ParameterDict({
-                'quantized_weight': nn.Parameter(quantized_weight, requires_grad=False),
-                'absmax': nn.Parameter(quant_state.absmax, requires_grad=False),
-                'in_features': in_features,
-                'out_features': out_features,
-            }),
+            nn.ParameterDict(
+                {
+                    "quantized_weight": nn.Parameter(
+                        quantized_weight, requires_grad=False
+                    ),
+                    "absmax": nn.Parameter(quant_state.absmax, requires_grad=False),
+                    "in_features": in_features,
+                    "out_features": out_features,
+                }
+            ),
             bias,
-            {'quantization_method': NF4Quantizer.name(), 'shape': tuple(weight.shape)},
+            {"quantization_method": NF4Quantizer.name(), "shape": tuple(weight.shape)},
         )
 
     @staticmethod
@@ -36,18 +44,18 @@ class NF4Quantizer(DataFreeQuantizer):
         import bitsandbytes.functional
 
         quant_state = bitsandbytes.functional.QuantState(
-            absmax=linear.weights_dict['absmax'],
-            shape=linear.meta['shape'],
+            absmax=linear.weights_dict["absmax"],
+            shape=linear.meta["shape"],
             dtype=input_.dtype,
             blocksize=64,
-            quant_type="nf4"
+            quant_type="nf4",
         )
 
         dequantized_weights = bitsandbytes.functional.dequantize_nf4(
-            linear.weights_dict['quantized_weight'],
+            linear.weights_dict["quantized_weight"],
             quant_state=quant_state,
         )
 
         return F.linear(
-            input_, dequantized_weights, linear.weights_dict.get('bias', None)
+            input_, dequantized_weights, linear.weights_dict.get("bias", None)
         )

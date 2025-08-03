@@ -27,5 +27,8 @@ jobs:
     - name: Run pytest
       run: uv run pytest
 
-    - name: Run flake8
-      run: uv run flake8 tinyquant tests
+    - name: ruff check
+      run:  uv tool run ruff check
+
+    - name: ruff format
+      run:  uv tool run ruff format --check

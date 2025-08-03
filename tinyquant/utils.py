@@ -4,13 +4,15 @@ from tinyquant.quantizer import quantize
 
 
 def _split_module_path(module_path: str):
-    parts = module_path.rsplit('.', 1)
+    parts = module_path.rsplit(".", 1)
     if len(parts) == 1:
         return None, parts[0]
     return parts[0], parts[1]
 
 
-def quantize_all_linear_layers(model: torch.nn.Module, method_name: str, verbose: bool = False, *args, **kwargs):
+def quantize_all_linear_layers(
+    model: torch.nn.Module, method_name: str, verbose: bool = False, *args, **kwargs
+):
     linear_paths = []
     for module_path, module in model.named_modules():
         if isinstance(module, torch.nn.Linear):
@@ -18,6 +20,7 @@ def quantize_all_linear_layers(model: torch.nn.Module, method_name: str, verbose
 
     if verbose:
         import tqdm
+
         linear_paths = tqdm(linear_paths)
 
     for linear_path in linear_paths:
@@ -26,7 +29,11 @@ def quantize_all_linear_layers(model: torch.nn.Module, method_name: str, verbose
         parent = model if parent_name is None else model.get_submodule(parent_name)
         linear = getattr(parent, linear_name)
 
-        setattr(parent, linear_name, quantize(method_name, linear.weight, linear.bias, *args, **kwargs))
+        setattr(
+            parent,
+            linear_name,
+            quantize(method_name, linear.weight, linear.bias, *args, **kwargs),
+        )
 
         del parent, linear
 
@@ -37,7 +44,7 @@ def quantize_matching_linear_layers(
     pattern: str,
     verbose: bool = False,
     *args,
-    **kwargs
+    **kwargs,
 ):
     linear_paths = []
     for module_path, module in model.named_modules():
@@ -47,6 +54,7 @@ def quantize_matching_linear_layers(
 
     if verbose:
         import tqdm
+
         linear_paths = tqdm(linear_paths)
 
     for linear_path in linear_paths:
@@ -55,6 +63,10 @@ def quantize_matching_linear_layers(
         parent = model if parent_name is None else model.get_submodule(parent_name)
         linear = getattr(parent, linear_name)
 
-        setattr(parent, linear_name, quantize(method_name, linear.weight, linear.bias, *args, **kwargs))
+        setattr(
+            parent,
+            linear_name,
+            quantize(method_name, linear.weight, linear.bias, *args, **kwargs),
+        )
 
         del parent, linear

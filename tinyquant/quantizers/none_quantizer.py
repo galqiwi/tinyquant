@@ -13,23 +13,27 @@ class NoneQuantizer(DataFreeQuantizer):
         return "none"
 
     @staticmethod
-    def quantize(weight: torch.Tensor, bias: Optional[torch.Tensor]) -> "QuantizedLinear":
-
+    def quantize(
+        weight: torch.Tensor, bias: Optional[torch.Tensor]
+    ) -> "QuantizedLinear":
         out_features, in_features = weight.shape
 
         return QuantizedLinear.from_weights(
-            nn.ParameterDict({
-                'weight': nn.Parameter(weight, requires_grad=False),
-            }),
-            bias, {
-                'quantization_method': NoneQuantizer.name(),
-                'in_features': in_features,
-                'out_features': out_features,
+            nn.ParameterDict(
+                {
+                    "weight": nn.Parameter(weight, requires_grad=False),
+                }
+            ),
+            bias,
+            {
+                "quantization_method": NoneQuantizer.name(),
+                "in_features": in_features,
+                "out_features": out_features,
             },
         )
 
     @staticmethod
     def forward(linear: "QuantizedLinear", input_: torch.Tensor) -> torch.Tensor:
         return F.linear(
-            input_, linear.weights_dict['weight'], linear.weights_dict.get('bias', None)
+            input_, linear.weights_dict["weight"], linear.weights_dict.get("bias", None)
         )

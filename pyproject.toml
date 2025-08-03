@@ -18,8 +18,6 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "flake8>=7.3.0",
-    "flake8-pyproject>=1.2.3",
     "mypy>=1.16.1",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
@@ -34,6 +32,3 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = "bitsandbytes.*"
 ignore_missing_imports = true
-
-[tool.flake8]
-max-line-length = 120
