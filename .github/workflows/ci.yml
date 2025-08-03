@@ -21,9 +21,6 @@ jobs:
     - name: Install dependencies
       run: uv sync --dev
 
-    - name: Run mypy
-      run: uv run mypy .
-
     - name: Run pytest
       run: uv run pytest
 
@@ -32,3 +29,6 @@ jobs:
 
     - name: ruff format
       run:  uv tool run ruff format --check
+
+    - name: Run mypy
+      run: uv run mypy .

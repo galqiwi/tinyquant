@@ -13,7 +13,11 @@ def _split_module_path(module_path: str) -> tuple[str | None, str]:
 
 
 def quantize_all_linear_layers(
-    model: torch.nn.Module, method_name: str, verbose: bool = False, *args: Any, **kwargs: Any
+    model: torch.nn.Module,
+    method_name: str,
+    verbose: bool = False,
+    *args: Any,
+    **kwargs: Any,
 ) -> None:
     linear_paths = []
     for module_path, module in model.named_modules():
