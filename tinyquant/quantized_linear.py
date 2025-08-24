@@ -38,12 +38,15 @@ class QuantizedLinear(nn.Module):
         cls,
         weights_dict: nn.ParameterDict,
         bias: Optional[torch.Tensor],
+        quantization_method: str,
         in_features: int,
         out_features: int,
         meta: Dict[str, Any],
     ) -> "QuantizedLinear":
         output = cls()
-        assert "quantization_method" in meta
+
+        assert "quantization_method" not in meta
+        meta["quantization_method"] = quantization_method
 
         assert "in_features" not in meta
         meta["in_features"] = in_features

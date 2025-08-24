@@ -25,7 +25,7 @@ class NF4Quantizer(DataFreeQuantizer):
         )
 
         return QuantizedLinear.from_weights(
-            nn.ParameterDict(
+            weights_dict=nn.ParameterDict(
                 {
                     "quantized_weight": nn.Parameter(
                         quantized_weight, requires_grad=False
@@ -33,13 +33,11 @@ class NF4Quantizer(DataFreeQuantizer):
                     "absmax": nn.Parameter(quant_state.absmax, requires_grad=False),
                 }
             ),
-            bias,
+            bias=bias,
+            quantization_method=NF4Quantizer.name(),
             in_features=in_features,
             out_features=out_features,
-            meta={
-                "quantization_method": NF4Quantizer.name(),
-                "block_size": block_size,
-            },
+            meta={"block_size": block_size},
         )
 
     @staticmethod

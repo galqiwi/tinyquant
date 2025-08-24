@@ -19,17 +19,16 @@ class NoneQuantizer(DataFreeQuantizer):
         out_features, in_features = weight.shape
 
         return QuantizedLinear.from_weights(
-            nn.ParameterDict(
+            weights_dict=nn.ParameterDict(
                 {
                     "weight": nn.Parameter(weight, requires_grad=False),
                 }
             ),
-            bias,
+            bias=bias,
+            quantization_method=NoneQuantizer.name(),
             in_features=in_features,
             out_features=out_features,
-            meta={
-                "quantization_method": NoneQuantizer.name(),
-            },
+            meta=dict(),
         )
 
     @staticmethod
