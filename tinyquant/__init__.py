@@ -1,1 +1,1 @@
-import tinyquant.quantizers  # noqa: F401
+import tinyquant.integrations  # noqa: F401

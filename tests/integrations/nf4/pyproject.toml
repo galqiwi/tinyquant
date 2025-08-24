@@ -1,0 +1,11 @@
+[project]
+name = "nf4"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "bitsandbytes>=0.47.0",
+    "tinyquant",
+]
+
+[tool.uv.sources]
+tinyquant = { workspace = true }
