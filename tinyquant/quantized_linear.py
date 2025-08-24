@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from functools import cached_property
 import json
-from typing import Dict, Any, Mapping, Optional
+from typing import Dict, Any, Mapping, Optional, Tuple
 from .quantizer import get_quantizer
 
 
@@ -38,15 +38,18 @@ class QuantizedLinear(nn.Module):
         cls,
         weights_dict: nn.ParameterDict,
         bias: Optional[torch.Tensor],
+        in_features: int,
+        out_features: int,
         meta: Dict[str, Any],
     ) -> "QuantizedLinear":
         output = cls()
         assert "quantization_method" in meta
 
-        assert "in_features" in meta
-        assert isinstance(meta["in_features"], int)
-        assert "out_features" in meta
-        assert isinstance(meta["out_features"], int)
+        assert "in_features" not in meta
+        meta["in_features"] = in_features
+
+        assert "out_features" not in meta
+        meta["out_features"] = out_features
 
         assert "meta" not in weights_dict
         assert isinstance(weights_dict, nn.ParameterDict)
@@ -81,6 +84,10 @@ class QuantizedLinear(nn.Module):
     @cached_property
     def out_features(self) -> int:
         return int(self.meta["out_features"])
+
+    @cached_property
+    def shape(self) -> Tuple[int, int]:
+        return (self.out_features, self.in_features)
 
     def load_state_dict(
         self, state_dict: Mapping[str, Any], strict: bool = True, assign: bool = False

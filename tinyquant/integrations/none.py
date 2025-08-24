@@ -25,10 +25,10 @@ class NoneQuantizer(DataFreeQuantizer):
                 }
             ),
             bias,
-            {
+            in_features=in_features,
+            out_features=out_features,
+            meta={
                 "quantization_method": NoneQuantizer.name(),
-                "in_features": in_features,
-                "out_features": out_features,
             },
         )
 

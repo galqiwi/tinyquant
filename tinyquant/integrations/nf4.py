@@ -34,11 +34,10 @@ class NF4Quantizer(DataFreeQuantizer):
                 }
             ),
             bias,
-            {
+            in_features=in_features,
+            out_features=out_features,
+            meta={
                 "quantization_method": NF4Quantizer.name(),
-                "shape": tuple(weight.shape),
-                "in_features": in_features,
-                "out_features": out_features,
                 "block_size": block_size,
             },
         )
@@ -49,7 +48,7 @@ class NF4Quantizer(DataFreeQuantizer):
 
         quant_state = bitsandbytes.functional.QuantState(
             absmax=linear.weights_dict["absmax"],
-            shape=linear.meta["shape"],
+            shape=linear.shape,
             dtype=input_.dtype,
             blocksize=linear.meta["block_size"],
             quant_type="nf4",
