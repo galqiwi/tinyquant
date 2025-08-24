@@ -34,6 +34,7 @@ disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
 module = "bitsandbytes.*"
+module = "higgs_kernels.*"
 ignore_missing_imports = true
 
 [tool.uv.workspace]
