@@ -31,7 +31,11 @@ python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+exclude = "tinyquant/integrations"
 
-[[tool.mypy.overrides]]
-module = "bitsandbytes.*"
-ignore_missing_imports = true
+[tool.uv.workspace]
+members = [
+    "tests/integrations/nf4",
+    "tests/integrations/higgs",
+    ".",
+]

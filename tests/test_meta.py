@@ -1,6 +1,6 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
-from tinyquant.quantized_linear import quantize_meta, dequantize_meta
+from tinyquant.quantized_linear import dequantize_meta, quantize_meta
 
 
 def check_quantize_dequantize(meta: Dict[str, Any]) -> None:

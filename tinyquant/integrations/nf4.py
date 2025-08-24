@@ -1,9 +1,11 @@
-from tinyquant.quantizer import DataFreeQuantizer, registered_quantizer
-from tinyquant.quantized_linear import QuantizedLinear
 from typing import Optional
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+from tinyquant.quantized_linear import QuantizedLinear
+from tinyquant.quantizer import DataFreeQuantizer, registered_quantizer
 
 
 @registered_quantizer
@@ -25,7 +27,7 @@ class NF4Quantizer(DataFreeQuantizer):
         )
 
         return QuantizedLinear.from_weights(
-            nn.ParameterDict(
+            weights_dict=nn.ParameterDict(
                 {
                     "quantized_weight": nn.Parameter(
                         quantized_weight, requires_grad=False
@@ -33,14 +35,11 @@ class NF4Quantizer(DataFreeQuantizer):
                     "absmax": nn.Parameter(quant_state.absmax, requires_grad=False),
                 }
             ),
-            bias,
-            {
-                "quantization_method": NF4Quantizer.name(),
-                "shape": tuple(weight.shape),
-                "in_features": in_features,
-                "out_features": out_features,
-                "block_size": block_size,
-            },
+            bias=bias,
+            quantization_method=NF4Quantizer.name(),
+            in_features=in_features,
+            out_features=out_features,
+            meta={"block_size": block_size},
         )
 
     @staticmethod
@@ -49,7 +48,7 @@ class NF4Quantizer(DataFreeQuantizer):
 
         quant_state = bitsandbytes.functional.QuantState(
             absmax=linear.weights_dict["absmax"],
-            shape=linear.meta["shape"],
+            shape=linear.shape,
             dtype=input_.dtype,
             blocksize=linear.meta["block_size"],
             quant_type="nf4",

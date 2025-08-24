@@ -1,10 +1,9 @@
-from tinyquant.quantizer import quantize
-from tinyquant.quantized_linear import QuantizedLinear
-
 import pytest
-
 import torch
 import torch.nn as nn
+
+from tinyquant.quantized_linear import QuantizedLinear
+from tinyquant.quantizer import quantize
 
 
 def test_full_precision_quantizer() -> None:

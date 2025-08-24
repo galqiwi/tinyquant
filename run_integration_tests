@@ -1,0 +1,27 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
+
+import os
+import subprocess
+import sys
+
+PKG_PATH = os.path.dirname(os.path.realpath(__file__))
+
+integrations_root = os.path.join(PKG_PATH, 'tests', 'integrations')
+
+integration_tests = os.listdir(integrations_root)
+
+print(f'Found {len(integration_tests)} integration tests: {[os.path.basename(d) for d in integration_tests]}')
+
+for test_name in integration_tests:
+    test_dir = os.path.join(integrations_root, test_name)
+    print(f'\n=== Running {test_name} ===')
+    result = subprocess.run(['bash', '-lc', 'uv run pytest'], cwd=test_dir)
+    if result.returncode != 0:
+        print(f'{test_name} failed (exit code {result.returncode})')
+        sys.exit(result.returncode)
+    else:
+        print(f'{test_name} passed')
