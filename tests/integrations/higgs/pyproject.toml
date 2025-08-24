@@ -1,0 +1,11 @@
+[project]
+name = "higgs"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "higgs-kernels>=0.3.0",
+    "tinyquant",
+]
+
+[tool.uv.sources]
+tinyquant = { workspace = true }
