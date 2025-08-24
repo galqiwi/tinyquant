@@ -1,8 +1,10 @@
+import json
+from functools import cached_property
+from typing import Any, Dict, Mapping, Optional, Tuple
+
 import torch
 import torch.nn as nn
-from functools import cached_property
-import json
-from typing import Dict, Any, Mapping, Optional, Tuple
+
 from .quantizer import get_quantizer
 
 

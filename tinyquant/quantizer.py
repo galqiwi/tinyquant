@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Dict, Type, Any, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional, Type
+
 import torch
 
 if TYPE_CHECKING:

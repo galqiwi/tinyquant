@@ -1,9 +1,10 @@
-from tinyquant.quantizer import DataFreeQuantizer, registered_quantizer
-from tinyquant.quantized_linear import QuantizedLinear
 from typing import Optional
+
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+
+from tinyquant.quantized_linear import QuantizedLinear
+from tinyquant.quantizer import DataFreeQuantizer, registered_quantizer
 
 
 @registered_quantizer

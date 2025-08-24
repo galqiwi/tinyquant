@@ -1,9 +1,8 @@
-from tinyquant.quantizer import quantize
-
 import pytest
-
 import torch
 import torch.nn as nn
+
+from tinyquant.quantizer import quantize
 
 
 @pytest.mark.parametrize("dtype", [torch.float16, torch.bfloat16])

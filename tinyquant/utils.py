@@ -1,8 +1,10 @@
-import torch
 import fnmatch
-from tinyquant.quantizer import quantize
 from typing import Any, Iterable
+
+import torch
 import tqdm
+
+from tinyquant.quantizer import quantize
 
 
 def _split_module_path(module_path: str) -> tuple[str | None, str]:
