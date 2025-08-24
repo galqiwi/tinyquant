@@ -1,5 +1,4 @@
 from tinyquant.quantizer import quantize
-from tinyquant.quantized_linear import QuantizedLinear
 
 import pytest
 
