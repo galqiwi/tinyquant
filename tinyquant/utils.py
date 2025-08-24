@@ -19,30 +19,14 @@ def quantize_all_linear_layers(
     *args: Any,
     **kwargs: Any,
 ) -> None:
-    linear_paths = []
-    for module_path, module in model.named_modules():
-        if isinstance(module, torch.nn.Linear):
-            linear_paths.append(module_path)
-
-    linear_paths_iter: Iterable[str]
-    if verbose:
-        linear_paths_iter = tqdm.tqdm(linear_paths)
-    else:
-        linear_paths_iter = linear_paths
-
-    for linear_path in linear_paths_iter:
-        parent_name, linear_name = _split_module_path(linear_path)
-
-        parent = model if parent_name is None else model.get_submodule(parent_name)
-        linear = getattr(parent, linear_name)
-
-        setattr(
-            parent,
-            linear_name,
-            quantize(method_name, linear.weight, linear.bias, *args, **kwargs),
-        )
-
-        del parent, linear
+    quantize_matching_linear_layers(
+        model=model,
+        method_name=method_name,
+        pattern="*",
+        verbose=verbose,
+        args=args,
+        kwargs=kwargs,
+    )
 
 
 def quantize_matching_linear_layers(
