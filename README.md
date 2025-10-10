@@ -29,7 +29,7 @@ quantize_matching_linear_layers(model, "nf4", "model.layers.*.self_attn.q_proj")
 
 # Or quantize all linear layers
 from tinyquant.utils import quantize_all_linear_layers
-quantize_all_linear_layers(model, "higgs", verbose=True)
+quantize_all_linear_layers(model, "higgs")
 
 # Model works exactly as before, but uses less memory
 output = model.generate(...)
