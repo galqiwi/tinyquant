@@ -10,6 +10,10 @@ New quantization methods get published with research code, sometimes a HuggingFa
 
 Implement your quantization method once for TinyQuant. Use any quantization method from any inference framework that supports TinyQuant.
 
+## Documentation
+
+[How to implement new quantization method](./NEW_QUANT.md)
+
 ## Quick Start
 
 ```python
