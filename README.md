@@ -42,14 +42,14 @@ output = model.generate(...)
 ## Installation
 
 ```bash
-pip install tinyquant
+uv pip install tinyquant
 ```
 
 For specific quantization methods, install their dependencies:
 
 ```bash
 # For NF4 quantization
-pip install bitsandbytes
+uv pip install bitsandbytes
 ```
 
 ## Features
