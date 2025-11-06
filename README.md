@@ -18,17 +18,25 @@ Implement your quantization method once for TinyQuant. Use any quantization meth
 
 ```python
 import torch
-from transformers import AutoModelForCausalLM
+import transformers
 from tinyquant.utils import quantize_matching_linear_layers
 
-# Load any PyTorch model
-model = AutoModelForCausalLM.from_pretrained(
-    "meta-llama/Llama-3.2-1B",
-    torch_dtype=torch.bfloat16,
-    device_map="cuda"
-)
+# Pick model & dtype
+model_id = "unsloth/Llama-3.2-1B"
+model_dtype = torch.bfloat16 if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else torch.float16
 
-# Quantize with one line - use pattern matching to target specific layers
+# Load model & tokenizer (safe attention backend for older GPUs)
+model = transformers.AutoModelForCausalLM.from_pretrained(
+    model_id,
+    device_map="auto",
+    dtype=model_dtype,
+    low_cpu_mem_usage=True,
+    attn_implementation="eager",
+)
+tokenizer = transformers.AutoTokenizer.from_pretrained(model_id)
+device = model.get_input_embeddings().weight.device
+
+# One-line quantization: target attention q_proj layers via glob
 quantize_matching_linear_layers(model, "nf4", "model.layers.*.self_attn.q_proj")
 
 # Model works exactly as before, but uses less memory
