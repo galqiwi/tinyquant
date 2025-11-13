@@ -1,0 +1,11 @@
+[project]
+name = "hqq"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "hqq>=0.2.1`",
+    "tinyquant",
+]
+
+[tool.uv.sources]
+tinyquant = { workspace = true }
