@@ -37,5 +37,6 @@ exclude = "tinyquant/integrations"
 members = [
     "tests/integrations/nf4",
     "tests/integrations/higgs",
+    "tests/integrations/hqq",
     ".",
 ]

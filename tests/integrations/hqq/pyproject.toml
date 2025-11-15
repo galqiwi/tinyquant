@@ -1,9 +1,9 @@
 [project]
-name = "nf4"
+name = "hqq-integrations-tests"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
-    "bitsandbytes>=0.47.0",
+    "hqq>=0.2.1",
     "pytest>=9.0.1",
     "tinyquant",
 ]
