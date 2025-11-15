@@ -24,13 +24,8 @@ class HQQQuantizer(DataFreeQuantizer):
         device: Optional[torch.device] = None,
         **extra_cfg: Any,
     ) -> "QuantizedLinear":
-        try:
-            from hqq.core.quantize import BaseQuantizeConfig, HQQLinear
-        except Exception as e:
-            raise ImportError(
-                "HQQ is not installed. Please `pip install hqq>=0.2.1`."
-            ) from e
-        # TODO: tests
+        from hqq.core.quantize import BaseQuantizeConfig, HQQLinear
+
         out_features, in_features = weight.shape
 
         if device is None:
@@ -83,12 +78,7 @@ class HQQQuantizer(DataFreeQuantizer):
 
     @staticmethod
     def forward(linear: "QuantizedLinear", input_: torch.Tensor) -> torch.Tensor:
-        try:
-            from hqq.core.quantize import HQQLinear
-        except Exception as e:
-            raise ImportError(
-                "HQQ is not installed. Please `pip install hqq>=0.2.1`."
-            ) from e
+        from hqq.core.quantize import HQQLinear
 
         hqq_state = {k: v.data for k, v in linear.weights_dict.items() if k != "meta"}
 
