@@ -4,6 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
     "higgs-kernels>=0.3.0",
+    "pytest>=9.0.1",
     "tinyquant",
 ]
 
