@@ -13,7 +13,7 @@ def main() -> None:
         device_map="auto",
         dtype=model_dtype,
         low_cpu_mem_usage=True,
-        attn_implementation="eager"
+        attn_implementation="eager",
     )
     tokenizer = transformers.AutoTokenizer.from_pretrained(model_id)
     device = model.get_input_embeddings().weight.device
@@ -23,12 +23,8 @@ def main() -> None:
 
     prompt = "What is quantization for neural networks? "
     inputs = tokenizer(prompt, return_tensors="pt")["input_ids"].to(device)
-    
-    output = model.generate(
-        inputs, 
-        do_sample=True,
-        max_new_tokens=100
-    )
+
+    output = model.generate(inputs, do_sample=True, max_new_tokens=100)
     print("Quantized model generation:")
     print(tokenizer.decode(output[0], skip_special_tokens=True))
 
