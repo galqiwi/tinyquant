@@ -10,7 +10,7 @@ def main() -> None:
 
     model = transformers.AutoModelForCausalLM.from_pretrained(
         model_id,
-        device_map="auto",
+        device_map="cuda",
         dtype=model_dtype,
         low_cpu_mem_usage=True,
         attn_implementation="eager",
