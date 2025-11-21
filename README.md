@@ -19,6 +19,7 @@ Implement your quantization method once for TinyQuant. Use any quantization meth
 ```python
 import torch
 import transformers
+import transformers
 from tinyquant.utils import quantize_matching_linear_layers
 
 # Load model & tokenizer (safe attention backend for older GPUs)
