@@ -21,19 +21,14 @@ import torch
 import transformers
 from tinyquant.utils import quantize_matching_linear_layers
 
-# Pick model & dtype
-model_id = "unsloth/Llama-3.2-1B"
-model_dtype = torch.bfloat16 if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else torch.float16
-
 # Load model & tokenizer (safe attention backend for older GPUs)
 model = transformers.AutoModelForCausalLM.from_pretrained(
-    model_id,
-    device_map="auto",
-    dtype=model_dtype,
+    "unsloth/Llama-3.2-1B",
+    device_map="cuda",
+    torch_dtype=torch.bfloat16 ,
     low_cpu_mem_usage=True,
-    attn_implementation="eager",
 )
-tokenizer = transformers.AutoTokenizer.from_pretrained(model_id)
+tokenizer = transformers.AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
 device = model.get_input_embeddings().weight.device
 
 # One-line quantization: target attention q_proj layers via glob
@@ -42,7 +37,7 @@ quantize_matching_linear_layers(model, "nf4", "model.layers.*.self_attn.q_proj")
 # Generate as usual
 prompt = "Quantization for neural networks helps with "
 inputs = tokenizer(prompt, return_tensors="pt").to(device)
-output = model.generate(**inputs, do_sample=True, max_new_tokens=100)
+output = model.generate(**inputs, do_sample=True, top_p=0.9, max_new_tokens=100)
 print(tokenizer.decode(output[0], skip_special_tokens=True))
 ```
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/galqiwi/tinyquant/tree/main/extra/huggingface-basic/quickstart.ipynb)
