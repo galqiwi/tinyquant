@@ -29,7 +29,7 @@ def dequantize_meta(meta_tensor: torch.Tensor) -> Dict[str, Any]:
 class QuantizedLinear(nn.Module):
     def __init__(self) -> None:
         super().__init__()
-        self.weights_dict = nn.ParameterDict()
+        self.tq_tensors = nn.ParameterDict()
 
     @classmethod
     def empty(cls) -> "QuantizedLinear":
@@ -47,6 +47,9 @@ class QuantizedLinear(nn.Module):
     ) -> "QuantizedLinear":
         output = cls()
 
+        tq_tensors = weights_dict
+        assert isinstance(tq_tensors, nn.ParameterDict)
+
         assert "quantization_method" not in meta
         meta["quantization_method"] = quantization_method
 
@@ -56,16 +59,15 @@ class QuantizedLinear(nn.Module):
         assert "out_features" not in meta
         meta["out_features"] = out_features
 
-        assert "meta" not in weights_dict
-        assert isinstance(weights_dict, nn.ParameterDict)
-        weights_dict["meta"] = nn.Parameter(quantize_meta(meta), requires_grad=False)
+        assert "meta" not in tq_tensors
+        tq_tensors["meta"] = nn.Parameter(quantize_meta(meta), requires_grad=False)
 
-        assert "bias" not in weights_dict
+        assert "bias" not in tq_tensors
         if bias is not None:
             assert isinstance(bias, torch.Tensor)
-            weights_dict["bias"] = nn.Parameter(bias, requires_grad=False)
+            tq_tensors["bias"] = nn.Parameter(bias, requires_grad=False)
 
-        output.weights_dict = weights_dict
+        output.tq_tensors = tq_tensors
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -73,10 +75,10 @@ class QuantizedLinear(nn.Module):
 
     @cached_property
     def meta(self) -> Dict[str, Any]:
-        if len(self.weights_dict) == 0:
+        if len(self.tq_tensors) == 0:
             raise RuntimeError("QuantizedLinear is not initialized")
 
-        return dequantize_meta(self.weights_dict["meta"])
+        return dequantize_meta(self.tq_tensors["meta"])
 
     @cached_property
     def quantization_method(self) -> str:
@@ -94,16 +96,20 @@ class QuantizedLinear(nn.Module):
     def shape(self) -> Tuple[int, int]:
         return (self.out_features, self.in_features)
 
+    @property
+    def weights_dict(self) -> Dict[str, nn.Parameter]:
+        return {key: value for key, value in self.tq_tensors.items() if key != "meta"}
+
     def load_state_dict(
         self, state_dict: Mapping[str, Any], strict: bool = True, assign: bool = False
     ) -> Any:
-        assert len(self.weights_dict) == 0
+        assert len(self.tq_tensors) == 0
 
-        prefix = "weights_dict."
+        prefix = "tq_tensors."
         for key, value_tensor in state_dict.items():
             assert key.startswith(prefix)
             param_name = key[len(prefix) :]
-            self.weights_dict[param_name] = nn.Parameter(
+            self.tq_tensors[param_name] = nn.Parameter(
                 torch.empty_like(value_tensor),
                 requires_grad=False,
             )
