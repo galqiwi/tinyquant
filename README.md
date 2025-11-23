@@ -31,13 +31,10 @@ model = AutoModelForCausalLM.from_pretrained(
 # Quantize with one line - use pattern matching to target specific layers
 quantize_matching_linear_layers(model, "nf4", "model.layers.*.self_attn.q_proj")
 
-# Or quantize all linear layers
-from tinyquant.utils import quantize_all_linear_layers
-quantize_all_linear_layers(model, "higgs")
-
 # Model works exactly as before, but uses less memory
 output = model.generate(...)
 ```
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/galqiwi/tinyquant/tree/main/extra/huggingface-basic/llama_1b.ipynb)
 
 ## Installation
 
