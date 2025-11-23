@@ -94,7 +94,7 @@ class QuantizedLinear(nn.Module):
 
     @cached_property
     def shape(self) -> Tuple[int, int]:
-        return (self.out_features, self.in_features)
+        return self.out_features, self.in_features
 
     @property
     def weights_dict(self) -> Dict[str, nn.Parameter]:
