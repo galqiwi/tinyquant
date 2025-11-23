@@ -34,7 +34,7 @@ quantize_matching_linear_layers(model, "nf4", "model.layers.*.self_attn.q_proj")
 # Model works exactly as before, but uses less memory
 output = model.generate(...)
 ```
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/galqiwi/tinyquant/tree/main/extra/huggingface-basic/llama_1b.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/galqiwi/tinyquant/blob/main/extra/huggingface-basic/llama_1b.ipynb)
 
 ## Installation
 
