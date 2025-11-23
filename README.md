@@ -18,26 +18,30 @@ Implement your quantization method once for TinyQuant. Use any quantization meth
 
 ```python
 import torch
-from transformers import AutoModelForCausalLM
+import transformers
+import transformers
 from tinyquant.utils import quantize_matching_linear_layers
 
-# Load any PyTorch model
-model = AutoModelForCausalLM.from_pretrained(
-    "meta-llama/Llama-3.2-1B",
-    torch_dtype=torch.bfloat16,
-    device_map="cuda"
+# Load model & tokenizer (safe attention backend for older GPUs)
+model = transformers.AutoModelForCausalLM.from_pretrained(
+    "unsloth/Llama-3.2-1B",
+    device_map="cuda",
+    torch_dtype=torch.bfloat16 ,
+    low_cpu_mem_usage=True,
 )
+tokenizer = transformers.AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
+device = model.get_input_embeddings().weight.device
 
-# Quantize with one line - use pattern matching to target specific layers
+# One-line quantization: target attention q_proj layers via glob
 quantize_matching_linear_layers(model, "nf4", "model.layers.*.self_attn.q_proj")
 
-# Or quantize all linear layers
-from tinyquant.utils import quantize_all_linear_layers
-quantize_all_linear_layers(model, "higgs")
-
-# Model works exactly as before, but uses less memory
-output = model.generate(...)
+# Generate as usual
+prompt = "Quantization for neural networks helps with "
+inputs = tokenizer(prompt, return_tensors="pt").to(device)
+output = model.generate(**inputs, do_sample=True, top_p=0.9, max_new_tokens=100)
+print(tokenizer.decode(output[0], skip_special_tokens=True))
 ```
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/galqiwi/tinyquant/tree/main/extra/huggingface-basic/quickstart.ipynb)
 
 ## Installation
 
