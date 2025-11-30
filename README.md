@@ -25,15 +25,18 @@ from tinyquant.utils import quantize_matching_linear_layers
 model = transformers.AutoModelForCausalLM.from_pretrained(
     "unsloth/Llama-3.2-1B",
     device_map="cuda",
-    torch_dtype=torch.bfloat16 ,
+    dtype=torch.bfloat16,
 )
 tokenizer = transformers.AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
 
 # One-line quantization: target attention q_proj layers via glob
 quantize_matching_linear_layers(model, "nf4", "model.layers.*.self_attn.q_proj")
 
-# Model works exactly as before, but uses less memory
-output = model.generate(...)
+# Generate as usual
+prompt = "Quantization for neural networks helps with "
+inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
+output = model.generate(**inputs, do_sample=True, max_new_tokens=100)
+print(tokenizer.decode(output[0], skip_special_tokens=True))
 ```
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/galqiwi/tinyquant/blob/main/extra/huggingface-basic/llama_1b.ipynb)
 

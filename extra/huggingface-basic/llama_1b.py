@@ -21,11 +21,7 @@ def main() -> None:
     # One-line quantization
     quantize_matching_linear_layers(model, "nf4", "model.layers.*.self_attn.q_proj")
 
-<<<<<<< HEAD
-    prompt = "What is quantization for neural networks? "
-=======
     prompt = "Quantization for neural networks helps with "
->>>>>>> 4082b3e (docs: update usage example)
     inputs = tokenizer(prompt, return_tensors="pt")["input_ids"].to(device)
 
     output = model.generate(inputs, do_sample=True, max_new_tokens=100)
