@@ -12,8 +12,7 @@ def main() -> None:
         model_id,
         device_map="cuda",
         dtype=model_dtype,
-        low_cpu_mem_usage=True,
-        attn_implementation="eager",
+        attn_implementation="eager",  # use standard PyTorch attention for maximum compatibility
     )
     tokenizer = transformers.AutoTokenizer.from_pretrained(model_id)
     device = model.get_input_embeddings().weight.device
