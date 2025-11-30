@@ -21,15 +21,13 @@ import torch
 import transformers
 from tinyquant.utils import quantize_matching_linear_layers
 
-# Load model & tokenizer (safe attention backend for older GPUs)
+# Load model & tokenizer
 model = transformers.AutoModelForCausalLM.from_pretrained(
     "unsloth/Llama-3.2-1B",
     device_map="cuda",
     torch_dtype=torch.bfloat16 ,
-    low_cpu_mem_usage=True,
 )
 tokenizer = transformers.AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
-device = model.get_input_embeddings().weight.device
 
 # One-line quantization: target attention q_proj layers via glob
 quantize_matching_linear_layers(model, "nf4", "model.layers.*.self_attn.q_proj")
