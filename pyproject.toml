@@ -38,5 +38,6 @@ members = [
     "tests/integrations/nf4",
     "tests/integrations/higgs",
     "tests/integrations/hqq",
+    "tests/integrations/sinq",
     ".",
 ]
