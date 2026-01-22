@@ -6,6 +6,8 @@ A unified interface for neural network quantization. TinyQuant bridges the gap b
 
 New quantization methods get published with research code, sometimes a HuggingFace integration. Production inference frameworks like vLLM need to implement each method separately. Research labs don't have resources to port to every framework. Result: most quantization methods never see production use.
 
+Even HuggingFace integration is hard. You need to understand `modeling_utils.py` — ~5k lines of code with hooks like `postprocess_model`. TinyQuant was designed for easy integration from day one.
+
 ## The Solution
 
 Implement your quantization method once for TinyQuant. Use any quantization method from any inference framework that supports TinyQuant.
