@@ -27,7 +27,9 @@ class HIGGSQuantizer(DataFreeQuantizer):
             raise ValueError(f"HIGGS requires float16 or bfloat16, got {weight.dtype}")
 
         if bias is not None and weight.device != bias.device:
-            raise ValueError(f"weight device {weight.device} != bias device {bias.device}")
+            raise ValueError(
+                f"weight device {weight.device} != bias device {bias.device}"
+            )
         if bias is not None and weight.dtype != bias.dtype:
             raise ValueError(f"weight dtype {weight.dtype} != bias dtype {bias.dtype}")
 

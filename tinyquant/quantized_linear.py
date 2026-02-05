@@ -52,7 +52,9 @@ class QuantizedLinear(nn.Module):
 
         tq_tensors = weights_dict
         if not isinstance(tq_tensors, nn.ParameterDict):
-            raise TypeError(f"weights_dict must be nn.ParameterDict, got {type(tq_tensors)}")
+            raise TypeError(
+                f"weights_dict must be nn.ParameterDict, got {type(tq_tensors)}"
+            )
 
         for reserved_key in ("quantization_method", "in_features", "out_features"):
             if reserved_key in meta:
@@ -109,7 +111,9 @@ class QuantizedLinear(nn.Module):
         self, state_dict: Mapping[str, Any], strict: bool = True, assign: bool = False
     ) -> Any:
         if len(self.tq_tensors) != 0:
-            raise RuntimeError("load_state_dict called on already-initialized QuantizedLinear")
+            raise RuntimeError(
+                "load_state_dict called on already-initialized QuantizedLinear"
+            )
 
         prefix = "tq_tensors."
         for key, value_tensor in state_dict.items():
