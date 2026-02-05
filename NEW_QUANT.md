@@ -16,7 +16,7 @@ It contains all tensors that are needed for quantized representation.
 It needs to be implemented for every quantization method.
 
 Currently, only data free quantizations can be implemented in-framework.
-To do that, one should use `DataFreeQuantizer` class instead of `Quantized`.
+To do that, one should use `DataFreeQuantizer` class instead of `Quantizer`.
 This class defines data free quantization method that returns `QuantizedLinear` from weight `Tensor`.
 
 You can learn more by looking into nf4 quantization. Good starting point is
