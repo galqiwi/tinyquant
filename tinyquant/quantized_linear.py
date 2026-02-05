@@ -9,7 +9,8 @@ from .quantizer import get_quantizer
 
 
 def quantize_meta(meta: Dict[str, Any]) -> torch.Tensor:
-    assert isinstance(meta, dict)
+    if not isinstance(meta, dict):
+        raise TypeError(f"meta must be a dict, got {type(meta)}")
     meta_tensor = torch.tensor(
         list(json.dumps(meta).encode("utf-8")),
         dtype=torch.uint8,
@@ -21,8 +22,10 @@ def dequantize_meta(meta_tensor: torch.Tensor) -> Dict[str, Any]:
     meta_bytes = meta_tensor.tolist()
     meta = bytes(meta_bytes).decode("utf-8")
     meta = json.loads(meta)
-    assert isinstance(meta, dict)
-    assert all(isinstance(key, str) for key in meta.keys())
+    if not isinstance(meta, dict):
+        raise TypeError(f"expected meta to be a dict, got {type(meta)}")
+    if not all(isinstance(key, str) for key in meta.keys()):
+        raise TypeError("all meta keys must be strings")
     return meta
 
 
@@ -48,23 +51,27 @@ class QuantizedLinear(nn.Module):
         output = cls()
 
         tq_tensors = weights_dict
-        assert isinstance(tq_tensors, nn.ParameterDict)
+        if not isinstance(tq_tensors, nn.ParameterDict):
+            raise TypeError(
+                f"weights_dict must be nn.ParameterDict, got {type(tq_tensors)}"
+            )
 
-        assert "quantization_method" not in meta
+        for reserved_key in ("quantization_method", "in_features", "out_features"):
+            if reserved_key in meta:
+                raise ValueError(f"meta must not contain reserved key '{reserved_key}'")
         meta["quantization_method"] = quantization_method
-
-        assert "in_features" not in meta
         meta["in_features"] = in_features
-
-        assert "out_features" not in meta
         meta["out_features"] = out_features
 
-        assert "meta" not in tq_tensors
+        if "meta" in tq_tensors:
+            raise ValueError("weights_dict must not contain reserved key 'meta'")
         tq_tensors["meta"] = nn.Parameter(quantize_meta(meta), requires_grad=False)
 
-        assert "bias" not in tq_tensors
+        if "bias" in tq_tensors:
+            raise ValueError("weights_dict must not contain reserved key 'bias'")
         if bias is not None:
-            assert isinstance(bias, torch.Tensor)
+            if not isinstance(bias, torch.Tensor):
+                raise TypeError(f"bias must be a Tensor, got {type(bias)}")
             tq_tensors["bias"] = nn.Parameter(bias, requires_grad=False)
 
         output.tq_tensors = tq_tensors
@@ -103,11 +110,15 @@ class QuantizedLinear(nn.Module):
     def load_state_dict(
         self, state_dict: Mapping[str, Any], strict: bool = True, assign: bool = False
     ) -> Any:
-        assert len(self.tq_tensors) == 0
+        if len(self.tq_tensors) != 0:
+            raise RuntimeError(
+                "load_state_dict called on already-initialized QuantizedLinear"
+            )
 
         prefix = "tq_tensors."
         for key, value_tensor in state_dict.items():
-            assert key.startswith(prefix)
+            if not key.startswith(prefix):
+                raise ValueError(f"unexpected key '{key}', expected prefix '{prefix}'")
             param_name = key[len(prefix) :]
             self.tq_tensors[param_name] = nn.Parameter(
                 torch.empty_like(value_tensor),

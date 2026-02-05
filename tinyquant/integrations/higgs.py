@@ -21,11 +21,17 @@ class HIGGSQuantizer(DataFreeQuantizer):
         import higgs_kernels.grids
         import higgs_kernels.linear
 
-        assert weight.is_cuda
-        assert weight.dtype in (torch.float16, torch.bfloat16)
+        if not weight.is_cuda:
+            raise ValueError("HIGGS quantization requires CUDA tensors")
+        if weight.dtype not in (torch.float16, torch.bfloat16):
+            raise ValueError(f"HIGGS requires float16 or bfloat16, got {weight.dtype}")
 
-        assert bias is None or weight.device == bias.device
-        assert bias is None or weight.dtype == bias.dtype
+        if bias is not None and weight.device != bias.device:
+            raise ValueError(
+                f"weight device {weight.device} != bias device {bias.device}"
+            )
+        if bias is not None and weight.dtype != bias.dtype:
+            raise ValueError(f"weight dtype {weight.dtype} != bias dtype {bias.dtype}")
 
         out_features, in_features = weight.shape
 
