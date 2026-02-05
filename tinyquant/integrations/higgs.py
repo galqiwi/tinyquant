@@ -55,10 +55,14 @@ class HIGGSQuantizer(DataFreeQuantizer):
     def forward(linear: "QuantizedLinear", input_: torch.Tensor) -> torch.Tensor:
         import higgs_kernels.linear
 
-        return higgs_kernels.linear.higgs_matmul_linear_2_256(
+        output = higgs_kernels.linear.higgs_matmul_linear_2_256(
             input_,
             linear.weights_dict["quantized"],
             linear.weights_dict["scales"],
             linear.weights_dict["grid"],
             linear.meta["group_size"],
         )
+        bias = linear.weights_dict.get("bias", None)
+        if bias is not None:
+            output = output + bias
+        return output
