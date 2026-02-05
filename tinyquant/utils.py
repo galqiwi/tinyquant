@@ -62,5 +62,3 @@ def quantize_matching_linear_layers(
             linear_name,
             quantize(method_name, linear.weight, linear.bias, *args, **kwargs),
         )
-
-        del parent, linear
