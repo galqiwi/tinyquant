@@ -36,6 +36,7 @@ exclude = "tinyquant/integrations"
 [tool.uv.workspace]
 members = [
     "tests/integrations/nf4",
+    "tests/integrations/nf4_embedding",
     "tests/integrations/higgs",
     "tests/integrations/hqq",
     ".",

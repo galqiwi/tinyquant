@@ -64,3 +64,55 @@ def quantize_matching_linear_layers(
         )
 
         del parent, linear
+
+
+def quantize_all_embedding_layers(
+    model: torch.nn.Module,
+    method_name: str,
+    verbose: bool = False,
+    *args: Any,
+    **kwargs: Any,
+) -> None:
+    quantize_matching_embedding_layers(
+        model=model,
+        method_name=method_name,
+        pattern="*",
+        verbose=verbose,
+        args=args,
+        kwargs=kwargs,
+    )
+
+
+def quantize_matching_embedding_layers(
+    model: torch.nn.Module,
+    method_name: str,
+    pattern: str,
+    verbose: bool = False,
+    *args: Any,
+    **kwargs: Any,
+) -> None:
+    embedding_paths = []
+    for module_path, module in model.named_modules():
+        if isinstance(module, torch.nn.Embedding):
+            if fnmatch.fnmatch(module_path, pattern):
+                embedding_paths.append(module_path)
+
+    embedding_paths_iter: Iterable[str]
+    if verbose:
+        embedding_paths_iter = tqdm.tqdm(embedding_paths)
+    else:
+        embedding_paths_iter = embedding_paths
+
+    for embedding_path in embedding_paths_iter:
+        parent_name, embedding_name = _split_module_path(embedding_path)
+
+        parent = model if parent_name is None else model.get_submodule(parent_name)
+        embedding = getattr(parent, embedding_name)
+
+        setattr(
+            parent,
+            embedding_name,
+            quantize(method_name, embedding.weight, None, *args, **kwargs),
+        )
+
+        del parent, embedding
