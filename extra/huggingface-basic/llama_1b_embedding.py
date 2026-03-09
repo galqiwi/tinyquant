@@ -1,7 +1,10 @@
 import torch
 import transformers
 
-from tinyquant.utils import quantize_matching_embedding_layers, quantize_matching_linear_layers
+from tinyquant.utils import (
+    quantize_matching_embedding_layers,
+    quantize_matching_linear_layers,
+)
 
 
 def main() -> None:

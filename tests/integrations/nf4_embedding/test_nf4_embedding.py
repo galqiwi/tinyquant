@@ -17,9 +17,7 @@ def test_nf4_embedding(dtype):
         device="cuda",
     )
 
-    quantized = quantize(
-        "nf4_embedding", original.weight, None, block_size=block_size
-    )
+    quantized = quantize("nf4_embedding", original.weight, None, block_size=block_size)
 
     indices = torch.arange(num_embeddings, device="cuda")
     original_output = original(indices)
