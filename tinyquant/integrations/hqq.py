@@ -82,7 +82,7 @@ class HQQQuantizer(DataFreeQuantizer):
 
         hqq_state = {k: v.data for k, v in linear.weights_dict.items() if k != "meta"}
 
-        hqq_cfg = linear.meta.get("meta", None)
+        hqq_cfg = linear.meta.get("config", None)
         hqq_device = linear.meta.get("device", None)
         hqq_compute_dtype = linear.meta.get("compute_dtype", None)
 
