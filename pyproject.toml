@@ -39,5 +39,6 @@ members = [
     "tests/integrations/nf4_embedding",
     "tests/integrations/higgs",
     "tests/integrations/hqq",
+    "benchmarks",
     ".",
 ]

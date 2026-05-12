@@ -83,17 +83,17 @@ class HQQQuantizer(DataFreeQuantizer):
         hqq_state = {k: v.data for k, v in linear.weights_dict.items() if k != "meta"}
 
         hqq_cfg = linear.meta.get("meta", None)
-        hqq_device = linear.meta.get("device", None)
         hqq_compute_dtype = linear.meta.get("compute_dtype", None)
 
-        hqq_layer = HQQLinear(
-            linear_layer=None,
-            quant_config=hqq_cfg,
-            compute_dtype=getattr(torch, hqq_compute_dtype),
-            device=hqq_device,
-            del_orig=True,
-            initialize=False,
-        )
+        with torch.device("meta"):
+            hqq_layer = HQQLinear(
+                linear_layer=None,
+                quant_config=hqq_cfg,
+                compute_dtype=getattr(torch, hqq_compute_dtype),
+                device="meta",
+                del_orig=True,
+                initialize=False,
+            )
 
-        hqq_layer.load_state_dict(hqq_state)
+        hqq_layer.load_state_dict(hqq_state, assign=True)
         return hqq_layer(input_)
