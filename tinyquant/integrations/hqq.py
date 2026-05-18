@@ -78,22 +78,25 @@ class HQQQuantizer(DataFreeQuantizer):
 
     @staticmethod
     def forward(linear: "QuantizedLinear", input_: torch.Tensor) -> torch.Tensor:
-        from hqq.core.quantize import HQQLinear
+        hqq_layer = getattr(linear, "_hqq_cached_layer", None)
+        if hqq_layer is None:
+            from hqq.core.quantize import HQQLinear
 
-        hqq_state = {k: v.data for k, v in linear.weights_dict.items() if k != "meta"}
+            hqq_state = {
+                k: v.data for k, v in linear.weights_dict.items() if k != "meta"
+            }
+            hqq_cfg = linear.meta.get("meta", None)
+            hqq_device = linear.meta.get("device", None)
+            hqq_compute_dtype = linear.meta.get("compute_dtype", None)
 
-        hqq_cfg = linear.meta.get("meta", None)
-        hqq_compute_dtype = linear.meta.get("compute_dtype", None)
-
-        with torch.device("meta"):
             hqq_layer = HQQLinear(
                 linear_layer=None,
                 quant_config=hqq_cfg,
                 compute_dtype=getattr(torch, hqq_compute_dtype),
-                device="meta",
+                device=hqq_device,
                 del_orig=True,
                 initialize=False,
             )
-
-        hqq_layer.load_state_dict(hqq_state, assign=True)
+            hqq_layer.load_state_dict(hqq_state)
+            linear._hqq_cached_layer = hqq_layer
         return hqq_layer(input_)
